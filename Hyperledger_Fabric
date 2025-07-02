@@ -1,1 +1,167 @@
-code
+Using docker and docker-compose
+deploying chaincode on channel 'mychannel'
+executing with the following
+- CHANNEL_NAME: mychannel
+- CC_NAME: basic
+- CC_SRC_PATH: ../asset-transfer-basic/chaincode-go
+- CC_SRC_LANGUAGE: go
+- CC_VERSION: 1.0
+- CC_SEQUENCE: auto
+- CC_END_POLICY: NA
+- CC_COLL_CONFIG: NA
+- CC_INIT_FCN: NA
+- DELAY: 3
+- MAX_RETRY: 5
+- VERBOSE: false
+executing with the following
+- CC_NAME: basic
+- CC_SRC_PATH: ../asset-transfer-basic/chaincode-go
+- CC_SRC_LANGUAGE: go
+- CC_VERSION: 1.0
+Vendoring Go dependencies at ../asset-transfer-basic/chaincode-go
+~/fabric-samples/fabric-samples/asset-transfer-basic/chaincode-go ~/fabric-samples/fabric-samples/test-network
+go: downloading go1.23.0 (linux/amd64)
+go: downloading github.com/hyperledger/fabric-protos-go-apiv2 v0.3.4
+go: downloading github.com/hyperledger/fabric-chaincode-go/v2 v2.0.0
+go: downloading github.com/hyperledger/fabric-contract-api-go/v2 v2.2.0
+go: downloading google.golang.org/protobuf v1.36.4
+go: downloading github.com/stretchr/testify v1.10.0
+go: downloading github.com/davecgh/go-spew v1.1.1
+go: downloading github.com/pmezard/go-difflib v1.0.0
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading google.golang.org/grpc v1.71.0
+go: downloading github.com/xeipuuv/gojsonschema v1.2.0
+go: downloading github.com/go-openapi/spec v0.21.0
+go: downloading github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415
+go: downloading golang.org/x/net v0.34.0
+go: downloading google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
+go: downloading golang.org/x/sys v0.29.0
+go: downloading github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb
+go: downloading github.com/go-openapi/jsonpointer v0.21.0
+go: downloading github.com/go-openapi/jsonreference v0.21.0
+go: downloading github.com/go-openapi/swag v0.23.0
+go: downloading golang.org/x/text v0.21.0
+go: downloading github.com/mailru/easyjson v0.7.7
+go: downloading github.com/josharian/intern v1.0.0
+~/fabric-samples/fabric-samples/test-network
+Finished vendoring Go dependencies
++ '[' false = true ']'
++ peer lifecycle chaincode package basic.tar.gz --path ../asset-transfer-basic/chaincode-go --lang golang --label basic_1.0
++ res=0
+Chaincode is packaged
+Installing chaincode on peer0.org1...
+Using organization 1
++ peer lifecycle chaincode queryinstalled --output json
++ grep '^basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105$'
++ jq -r 'try (.installed_chaincodes[].package_id)'
++ test 1 -ne 0
++ peer lifecycle chaincode install basic.tar.gz
++ res=0
+2025-07-01 17:08:08.106 UTC 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:<status:200 payload:"\nJbasic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105\022\tbasic_1.0" >
+2025-07-01 17:08:08.107 UTC 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105
+Chaincode is installed on peer0.org1
+Install chaincode on peer0.org2...
+Using organization 2
++ peer lifecycle chaincode queryinstalled --output json
++ jq -r 'try (.installed_chaincodes[].package_id)'
++ grep '^basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105$'
++ test 1 -ne 0
++ peer lifecycle chaincode install basic.tar.gz
++ res=0
+2025-07-01 17:08:43.415 UTC 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:<status:200 payload:"\nJbasic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105\022\tbasic_1.0" >
+2025-07-01 17:08:43.416 UTC 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105
+Chaincode is installed on peer0.org2
+++ peer lifecycle chaincode querycommitted --channelID mychannel --name basic
+++ sed -n '/Version:/{s/.*Sequence: //; s/, Endorsement Plugin:.*$//; p;}'
+Error: query failed with status: 404 - namespace basic is not defined
++ COMMITTED_CC_SEQUENCE=
++ res=0
+Using organization 1
++ peer lifecycle chaincode queryinstalled --output json
++ grep '^basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105$'
++ jq -r 'try (.installed_chaincodes[].package_id)'
++ res=0
+basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105
+Query installed successful on peer0.org1 on channel
+Using organization 1
++ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /home/saigandam/fabric-samples/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem --channelID mychannel --name basic --version 1.0 --package-id basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105 --sequence 1
++ res=0
+2025-07-01 17:08:47.492 UTC 0001 INFO [chaincodeCmd] ClientWait -> txid [a8f1305fbd3e008c198f63408e50f827a805f2355dbdd56ee46677871518a148] committed with status (VALID) at localhost:7051
+Chaincode definition approved on peer0.org1 on channel 'mychannel'
+Using organization 1
+Checking the commit readiness of the chaincode definition on peer0.org1 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org1, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+        "approvals": {
+                "Org1MSP": true,
+                "Org2MSP": false
+        }
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org1 on channel 'mychannel'
+Using organization 2
+Checking the commit readiness of the chaincode definition on peer0.org2 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org2, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+        "approvals": {
+                "Org1MSP": true,
+                "Org2MSP": false
+        }
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org2 on channel 'mychannel'
+Using organization 2
++ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /home/saigandam/fabric-samples/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem --channelID mychannel --name basic --version 1.0 --package-id basic_1.0:6a6f743366675481339c7ddda5f281a441c9ad8c13e32a9a5c07b892e44de105 --sequence 1
++ res=0
+2025-07-01 17:08:55.788 UTC 0001 INFO [chaincodeCmd] ClientWait -> txid [c054bf5c7f9cf442013003071b34944ee17709323ac6b3531fda5dd35ce9e7a3] committed with status (VALID) at localhost:9051
+Chaincode definition approved on peer0.org2 on channel 'mychannel'
+Using organization 1
+Checking the commit readiness of the chaincode definition on peer0.org1 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org1, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+        "approvals": {
+                "Org1MSP": true,
+                "Org2MSP": true
+        }
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org1 on channel 'mychannel'
+Using organization 2
+Checking the commit readiness of the chaincode definition on peer0.org2 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org2, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+        "approvals": {
+                "Org1MSP": true,
+                "Org2MSP": true
+        }
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org2 on channel 'mychannel'
+Using organization 1
+Using organization 2
++ peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /home/saigandam/fabric-samples/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem --channelID mychannel --name basic --peerAddresses localhost:7051 --tlsRootCertFiles /home/saigandam/fabric-samples/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem --peerAddresses localhost:9051 --tlsRootCertFiles /home/saigandam/fabric-samples/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem --version 1.0 --sequence 1
++ res=0
+2025-07-01 17:09:04.212 UTC 0001 INFO [chaincodeCmd] ClientWait -> txid [a1c4c42b9145c19dd2ba4b31bb1d4ffa0ec01cf1736aab3ea47c95f5523ca607] committed with status (VALID) at localhost:9051
+2025-07-01 17:09:04.262 UTC 0002 INFO [chaincodeCmd] ClientWait -> txid [a1c4c42b9145c19dd2ba4b31bb1d4ffa0ec01cf1736aab3ea47c95f5523ca607] committed with status (VALID) at localhost:7051
+Chaincode definition committed on channel 'mychannel'
+Using organization 1
+Querying chaincode definition on peer0.org1 on channel 'mychannel'...
+Attempting to Query committed status on peer0.org1, Retry after 3 seconds.
++ peer lifecycle chaincode querycommitted --channelID mychannel --name basic
++ res=0
+Committed chaincode definition for chaincode 'basic' on channel 'mychannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+Query chaincode definition successful on peer0.org1 on channel 'mychannel'
+Using organization 2
+Querying chaincode definition on peer0.org2 on channel 'mychannel'...
+Attempting to Query committed status on peer0.org2, Retry after 3 seconds.
++ peer lifecycle chaincode querycommitted --channelID mychannel --name basic
++ res=0
+Committed chaincode definition for chaincode 'basic' on channel 'mychannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+Query chaincode definition successful on peer0.org2 on channel 'mychannel'
+Chaincode initialization is not required
